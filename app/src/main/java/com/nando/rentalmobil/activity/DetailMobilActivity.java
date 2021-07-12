@@ -17,6 +17,7 @@ import com.nando.rentalmobil.helper.DataHelper;
 
 public class DetailMobilActivity extends AppCompatActivity {
 
+    //deklarasi variabel
     protected Cursor cursor;
     String sMerk, sHarga, sGambar;
     DataHelper dbHelper;
@@ -27,21 +28,25 @@ public class DetailMobilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_mobil);
 
+        //deklarasi variabel bundle utk mengambil pesan yg dikirimkan melalui method intent
         Bundle terima = getIntent().getExtras();
 
+        //membuat objek dbcenter
         dbHelper = new DataHelper(this);
-        Intent intent = getIntent();
 
+        //membuat variabel string untuk menangkap data "merk"
         String merk = terima.getString("merk");
-
+        //membuat objek db yang akan di baca
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        //membaca database melalui cursor dengan query
         cursor = db.rawQuery("select * from mobil where merk = '" + merk + "'", null);
         cursor.moveToFirst();
+        //mendapatkan value berdasarkan merk yg dipilih user
         if (cursor.getCount() > 0) {
             sMerk = cursor.getString(0);
             sHarga = cursor.getString(1);
         }
-
+        //menampilkan gambar berdasarkan merk yg dipilih user
         if (sMerk.equals("Avanza")) {
             sGambar = "avanza";
         } else if (sMerk.equals("Xenia")) {
@@ -62,14 +67,17 @@ public class DetailMobilActivity extends AppCompatActivity {
             sGambar = "alphard";
         }
 
+        //menghubungkan variabel ke komponen pada layout
         ImageView ivGambar = findViewById(R.id.ivMobil);
         TextView tvMerk = findViewById(R.id.JMobil);
         TextView tvHarga = findViewById(R.id.JHarga);
 
+        //menampilkan nilai
         tvMerk.setText(sMerk);
-        ivGambar.setImageResource(getResources().getIdentifier(sGambar, "drawable", getPackageName()));
         tvHarga.setText("Rp. " + sHarga);
-
+        //menghubungkan gambar mobil ke drawable
+        ivGambar.setImageResource(getResources().getIdentifier(sGambar, "drawable", getPackageName()));
+        //memangil method setupToolbar
         setupToolbar();
 
     }

@@ -15,6 +15,7 @@ import com.nando.rentalmobil.helper.DataHelper;
 
 public class DetailPenyewaActivity extends AppCompatActivity {
 
+    //Deklarasi variabel
     String sNama, sAlamat, sHP, sMerk, sHarga;
     int iLama, iPromo, iTotal;
     double dTotal;
@@ -28,13 +29,17 @@ public class DetailPenyewaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_penyewa);
 
+        //membuat objek dbHelper
         dbHelper = new DataHelper(this);
-
+        //membuat objek db yang akan di baca
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+        //membaca database melalui cursor dengan query
         cursor = db.rawQuery("select * from penyewa, mobil, sewa where penyewa.nama = sewa.nama AND mobil.merk = sewa.merk AND penyewa.nama = '" + getIntent().getStringExtra("nama") + "'", null);
+        //memindah kursor ke data yang pertama
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             cursor.moveToPosition(0);
+            //get data
             sNama = cursor.getString(0);
             sAlamat = cursor.getString(1);
             sHP = cursor.getString(2);
@@ -44,18 +49,17 @@ public class DetailPenyewaActivity extends AppCompatActivity {
             iLama = cursor.getInt(8);
             dTotal = cursor.getDouble(9);
         }
-
+        //menghubungkan variabel TextView ke komponen pada layout
         TextView tvNama = findViewById(R.id.HNama);
         TextView tvAlamat = findViewById(R.id.HAlamat);
         TextView tvHP = findViewById(R.id.HTelp);
-
         TextView tvMerk = findViewById(R.id.HMerk);
         TextView tvHarga = findViewById(R.id.HHarga);
-
         TextView tvLama = findViewById(R.id.HLamaSewa);
         TextView tvPromo = findViewById(R.id.HPromo);
         TextView tvTotal = findViewById(R.id.HTotal);
 
+        //menampilkan nilai / data ke textview
         tvNama.setText("     " + sNama);
         tvAlamat.setText("     " + sAlamat);
         tvHP.setText("     " + sHP);
@@ -68,6 +72,7 @@ public class DetailPenyewaActivity extends AppCompatActivity {
         iTotal = (int) dTotal;
         tvTotal.setText("     Rp. " + iTotal);
 
+        //memangil methode setupToolbar
         setupToolbar();
 
     }

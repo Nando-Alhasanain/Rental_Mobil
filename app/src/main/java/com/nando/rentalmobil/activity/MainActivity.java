@@ -24,20 +24,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //menghubungkan variabel button informasi ke komponen button pada layout
         Button informasi = findViewById(R.id.btn_info_mobil);
+        //menghubungkan variabel button sewa ke komponen button pada layout
         Button sewa = findViewById(R.id.btn_sewa);
 
+        //membuat fungsi onclick
         informasi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //membuat objek intent berpindah activity ke DaftarMobilActivity
                 Intent i = new Intent(MainActivity.this, DaftarMobilActivity.class);
                 startActivity(i);
             }
         });
-
+        //membuat fungsi onclick
         sewa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //membuat objek intent berpindah activity ke PenyewaActivity
                 Intent p = new Intent(MainActivity.this, PenyewaActivity.class);
                 startActivity(p);
             }

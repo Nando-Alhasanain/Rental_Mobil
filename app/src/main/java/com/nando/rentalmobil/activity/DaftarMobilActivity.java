@@ -21,23 +21,55 @@ import com.nando.rentalmobil.helper.DataHelper;
 
 public class DaftarMobilActivity extends AppCompatActivity {
 
+    //deklarasi variabel
     String[] daftar;
     ListView ListView1;
-    Menu menu;
     protected Cursor cursor;
     DataHelper dbcenter;
-    public static DaftarMobilActivity m;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mobil);
-
-        m = this;
+        //membuat objek dbcenter
         dbcenter = new DataHelper(this);
-
+        //memangil method
         RefreshList();
         setupToolbar();
+
+    }
+
+    public void RefreshList() {
+        //membuat objek db yang akan di baca
+        SQLiteDatabase db = dbcenter.getReadableDatabase();
+        //membaca database melalui cursor dengan query
+        cursor = db.rawQuery("SELECT * FROM mobil", null);
+        ////membuat objek untuk mengembalikan jumlah item yg akan ditampilkan ke list
+        daftar = new String[cursor.getCount()];
+        cursor.moveToFirst();
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            cursor.moveToPosition(i);
+            daftar[i] = cursor.getString(0);
+        }
+        //menghubungkan variabel ke komponen pada layout
+        ListView1 = findViewById(R.id.listView1);
+        //membuat variabel adapter
+        ListView1.setAdapter(new ArrayAdapter(this, layout.simple_list_item_1, daftar));
+        //select listview
+        ListView1.setSelected(true);
+        //membuat fungsi onItemClick
+        ListView1.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView arg0, View arg1, int arg2, long arg3) {
+                final String selection = daftar[arg2];
+                //membuat objek intent berpindah activity ke DetailMobilActivity
+                Intent i = new Intent(DaftarMobilActivity.this, DetailMobilActivity.class);
+                i.putExtra("merk", selection);
+                startActivity(i);
+            }
+        });
+
+        ((ArrayAdapter) ListView1.getAdapter()).notifyDataSetInvalidated();
 
     }
 
@@ -57,29 +89,5 @@ public class DaftarMobilActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void RefreshList() {
-        SQLiteDatabase db = dbcenter.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM mobil", null);
-        daftar = new String[cursor.getCount()];
-        cursor.moveToFirst();
-        for (int i = 0; i < cursor.getCount(); i++) {
-            cursor.moveToPosition(i);
-            daftar[i] = cursor.getString(0);
-        }
-        ListView1 = findViewById(R.id.listView1);
-        ListView1.setAdapter(new ArrayAdapter(this, layout.simple_list_item_1, daftar));
-        ListView1.setSelected(true);
-        ListView1.setOnItemClickListener(new OnItemClickListener() {
 
-            public void onItemClick(AdapterView arg0, View arg1, int arg2, long arg3) {
-                final String selection = daftar[arg2];
-                Intent i = new Intent(DaftarMobilActivity.this, DetailMobilActivity.class);
-                i.putExtra("merk", selection);
-                startActivity(i);
-            }
-        });
-
-        ((ArrayAdapter) ListView1.getAdapter()).notifyDataSetInvalidated();
-
-    }
 }
